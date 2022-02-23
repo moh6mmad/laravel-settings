@@ -8,5 +8,13 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Moh6mmad\\LaravelSettings\\": "src/"
+        },
+        "files": [
+            "./Helpers/Settings.php"
+        ]
+    }
 }
