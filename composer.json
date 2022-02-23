@@ -1,0 +1,12 @@
+{
+    "name": "moh6mmad/laravel-settings",
+    "description": "This package allows you to add settings to your laravel project",
+    "authors": [
+        {
+            "name": "Mohammad Hadizadeh",
+            "email": "hadizadeh66@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
