@@ -2,8 +2,6 @@
 
 namespace Moh6mmad\LaravelSettings\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Moh6mmad\LaravelSettings\Models\LaravelSettings as Setting;
 
@@ -12,7 +10,61 @@ class LaravelSettingsController extends Controller
     
     public static function get(string $key = '')
     {
-       echo self::setting('template.title');
+        if (empty($key)) {
+            return;
+        }
+
+        $settingKey = explode('.', $key);
+
+        if (!is_array($settingKey)) {
+            return;
+        }
+        
+        $setting = Setting::where('setting_group', $settingKey[0])->where('name', $settingKey[1])->first();
+
+        if (empty($setting)) {
+            return false;
+        }
+    
+        $array = json_decode($setting->value, true);
+    
+        if (is_array($array)) {
+            return  $array ?? '';
+        }
+
+        return $setting->value;
+    }
+
+    public static function set(string $key = '', $value = '')
+    {
+        if (empty($key)) {
+            return;
+        }
+
+        $settingKey = explode('.', $key);
+
+        if (!is_array($settingKey)) {
+            return;
+        }
+
+        if (is_array($value) || is_object($value)) {
+            $value = json_encode($value);
+        }
+    
+        try {
+            Setting::updateOrCreate(
+                [
+                'setting_group' => $settingKey[0],
+                'name'          => $settingKey[1],
+            ],
+                [
+                'value' => $value
+            ]
+            );
+            return true;
+        } catch (\Throwable $th) {
+            return false;
+        }
     }
 
     /**
@@ -30,45 +82,85 @@ class LaravelSettingsController extends Controller
             return;
         }
 
-        $settingKey = explode('.', $key);
+        return empty($value) ? self::get($key) : self::set($key, $value);
+        
+    }
 
-        if (!is_array($settingKey)) {
-            return;
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $groups = Setting::select('setting_group')->where('hidden', '0')->groupBy('setting_group')->get();
+        $settings = Setting::where('hidden', '0')->get();
+        
+        return view('laravel-settings::settings.index', compact('settings', 'groups'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('laravel-settings::settings.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        if ($request->has('name')) {
+
+            Setting::insert([
+                'name' => $request->input('name'),
+                'value' => $request->input('value'),
+                'options' => $request->input('options') ?? '',
+                'input_type' => $request->input('input_type') ?? '',
+                'setting_group' => $request->input('setting_group'),
+            ]);
+
+        } elseif ($request->has('settings')) {
+
+            foreach ($request->input('settings') as $key => $setting) {
+
+                foreach ($setting as $name => $value) {
+
+                    Setting::updateOrCreate(
+                        [
+                            'name'=>  $name, 
+                            'setting_group' =>  $key
+                        ],
+                        [
+                            'value' => $value,  
+                            'input_type' => $request->input('types')[$name],  
+                            'options' => $request->input('options')[$name] ?? ''
+                        ]
+                    );
+
+                }                
+            }
         }
-
-        if (empty($value)) {
-            $setting = Setting::where('setting_group', $settingKey[0])->where('name', $settingKey[1])->first();
-
-            if (empty($setting)) {
-                return false;
-            }
         
-            $array = json_decode($setting->value, true);
-        
-            if (is_array($array)) {
-                return  $array ?? '';
-            }
+        return redirect()->back()->with('success', 'New setting has been stored in database.');
+    }
 
-            return $setting->value;
-        } else {
-            if (is_array($value) || is_object($value)) {
-                $value = json_encode($value);
-            }
-        
-            try {
-                Setting::updateOrCreate(
-                    [
-                    'setting_group' => $settingKey[0],
-                    'name'          => $settingKey[1],
-                ],
-                    [
-                    'value' => $value
-                ]
-                );
-                return true;
-            } catch (\Throwable $th) {
-                return false;
-            }
-        }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Setting  $setting
+     * @return \Illuminate\Http\Response
+     */
+    public function delete($settingId)
+    {
+        Setting::where('id', $settingId)->delete();
+        return redirect()->back()->with('success', 'Selected setting record has been deleted from database.');
     }
 }
