@@ -3,6 +3,7 @@
 namespace Moh6mmad\LaravelSettings;
 
 use Illuminate\Support\ServiceProvider;
+use Moh6mmad\LaravelSettings\Console\InstallLaravelSettings;
 
 class LaravelSettingsServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,12 @@ class LaravelSettingsServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InstallLaravelSettings::class,
+            ]);
+        }
         include __DIR__.'/routes.php';
     }
 }
