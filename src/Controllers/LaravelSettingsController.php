@@ -96,7 +96,7 @@ class LaravelSettingsController extends Controller
         $groups = Setting::select('setting_group')->where('hidden', '0')->groupBy('setting_group')->get();
         $settings = Setting::where('hidden', '0')->get();
         
-        return view('laravel-settings::settings.index', compact('settings', 'groups'));
+        return view('admin.settings.index', compact('settings', 'groups'));
     }
 
     /**
@@ -106,7 +106,7 @@ class LaravelSettingsController extends Controller
      */
     public function create()
     {
-        return view('laravel-settings::settings.create');
+        return view('admin.settings.create');
     }
 
     /**
