@@ -14,7 +14,7 @@
             "Moh6mmad\\LaravelSettings\\": "src/"
         },
         "files": [
-            "./Helpers/Settings.php"
+            "src/Helpers/Settings.php"
         ]
     }
 }
