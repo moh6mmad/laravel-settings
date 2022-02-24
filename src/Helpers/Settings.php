@@ -13,6 +13,6 @@ if (!function_exists('setting')) {
  */
     function setting(string $key = '', $value = '')
     {
-        LaravelSettingsController::setting($key, $value);
+        return LaravelSettingsController::setting($key, $value);
     }
 }
