@@ -1,6 +1,6 @@
 <?php
 
-use Moh6mmad\LaravelSettings\Models\LaravelSettings;
+use Moh6mmad\LaravelSettings\Controllers\LaravelSettingsController;
 if (!function_exists('setting')) {
 /**
  * This function allows app to get directly settings from database
@@ -13,6 +13,6 @@ if (!function_exists('setting')) {
  */
     function setting(string $key = '', $value = '')
     {
-        LaravelSettings::setting($key, $value);
+        LaravelSettingsController::setting($key, $value);
     }
 }
