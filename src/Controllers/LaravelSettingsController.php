@@ -41,14 +41,20 @@ class LaravelSettingsController extends Controller
         if (empty(self::$settings)) {
             return false;
         }
+
+        $group = self::$settings[$settingKey[0]];
         
-        $array = json_decode(self::$settings[$settingKey[0]][$settingKey[1]], true);
+        if (empty( $group[$settingKey[1]])) {
+            return false;
+        }
+
+        $array = json_decode($group[$settingKey[1]], true);
     
         if (is_array($array)) {
             return  $array ?? '';
         }
 
-        return self::$settings[$settingKey[0]][$settingKey[1]];
+        return $group[$settingKey[1]] ?? false;
     }
 
     public static function set(string $key = '', $value = '')
