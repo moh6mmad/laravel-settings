@@ -10,7 +10,7 @@ class LaravelSettingsController extends Controller
 {
     static public $settings = null;
     
-    public function loadAdd()
+    protected static function loadAdd()
     {
         if (empty(self::$settings)) {
             $settings = DB::table('settings')->get();
