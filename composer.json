@@ -1,6 +1,7 @@
 {
     "name": "moh6mmad/laravel-settings",
-    "description": "This package allows you to add settings to your laravel project",
+    "description": "This package allows you to add settings to your Laravel project",
+    "homepage": "https://lync.me/Mohammad",
     "authors": [
         {
             "name": "Mohammad Hadizadeh",
@@ -8,7 +9,9 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "php": ">=7.0"
+    },
     "autoload": {
         "psr-4": {
             "Moh6mmad\\LaravelSettings\\": "src/"
@@ -16,5 +19,6 @@
         "files": [
             "src/Helpers/Settings.php"
         ]
-    }
+    },
+    "license": "MIT"
 }
