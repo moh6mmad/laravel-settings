@@ -10,18 +10,33 @@ class LaravelSettingsController extends Controller
 {
     static public $settings = null;
     
+    /**
+     * Initial the feature and loading all settings for first call
+     * 
+     * @param bool|void
+     */
     protected static function loadAdd()
     {
         if (empty(self::$settings)) {
             $settings = DB::table('settings')->get();
         }
 
-        foreach ($settings as $setting)
-        {
+        if (empty($settings)) {
+            return false;
+        }
+
+        foreach ($settings as $setting) {
             self::$settings[$setting->setting_group][$setting->name] = $setting->value;
         }
     }
 
+    /**
+     * Getting a specific setting value
+     * 
+     * @param string $key
+     * 
+     * @return string|array
+     */
     public static function get(string $key = '')
     {
         if (empty($key)) {
@@ -57,9 +72,17 @@ class LaravelSettingsController extends Controller
         return $group[$settingKey[1]] ?? false;
     }
 
-    public static function set(string $key = '', $value = '')
+    /**
+     * Set & update a setting value
+     * 
+     * @param string $key
+     * @param string $value
+     * 
+     * @return bool|void
+     */
+    public static function set(string $key = '', $value = null)
     {
-        if (empty($key)) {
+        if (empty($key) || empty($value)) {
             return;
         }
 
