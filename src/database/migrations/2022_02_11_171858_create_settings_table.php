@@ -15,19 +15,21 @@ class CreateSettingsTable extends Migration
     public function up()
     {
         Schema::create('settings', function (Blueprint $table) {
-            $table->integer('id');
+            $table->bigIncrements('id')->index();
             $table->string('name');
             $table->string('setting_group')->default('general');
             $table->longText('value');
             $table->string('input_type')->default('text');
             $table->longText('options')->nullable();
             $table->boolean('hidden')->default(0);
-            $table->primary(['name', 'setting_group']);
+            //$table->primary(['name', 'name']);
             $table->timestamps();
         });
-
-        DB::update("ALTER TABLE `settings` ADD INDEX (`id`);");
-        DB::update("ALTER TABLE `settings` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT");
+        
+        Schema::table('settings', function($table) {
+			$table->dropPrimary('id');
+            $table->primary(['name', 'name']);
+		});
     }
 
     /**
