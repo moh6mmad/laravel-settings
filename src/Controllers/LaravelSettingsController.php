@@ -18,7 +18,11 @@ class LaravelSettingsController extends Controller
     protected static function loadAdd()
     {
         if (empty(self::$settings)) {
-            $settings = DB::table('settings')->get();
+            try {
+                $settings = DB::table('settings')->get();
+            } catch (\Throwable $th) {
+                $settings = [];
+            }
         }
 
         if (empty($settings)) {
