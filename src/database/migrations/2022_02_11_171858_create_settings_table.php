@@ -22,13 +22,12 @@ class CreateSettingsTable extends Migration
             $table->string('input_type')->default('text');
             $table->longText('options')->nullable();
             $table->boolean('hidden')->default(0);
-            //$table->primary(['name', 'name']);
             $table->timestamps();
         });
         
         Schema::table('settings', function($table) {
 			$table->dropPrimary('id');
-            $table->primary(['name', 'name']);
+            $table->primary(['name', 'setting_group']);
 		});
     }
 
