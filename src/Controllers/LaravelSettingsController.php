@@ -9,6 +9,7 @@ use Moh6mmad\LaravelSettings\Models\LaravelSettings as Setting;
 class LaravelSettingsController extends Controller
 {
     static public $settings = null;
+    static private $settingsLoaded = false;
     
     /**
      * Initial the feature and loading all settings for first call
@@ -17,9 +18,14 @@ class LaravelSettingsController extends Controller
      */
     protected static function loadAdd()
     {
+        if (self::$settingsLoaded) {
+            return [];
+        }
+
         if (empty(self::$settings)) {
             try {
                 $settings = DB::table('settings')->get();
+                self::$settingsLoaded = true;
             } catch (\Throwable $th) {
                 $settings = [];
             }
