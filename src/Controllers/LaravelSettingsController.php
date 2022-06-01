@@ -63,7 +63,7 @@ class LaravelSettingsController extends Controller
             self::loadAdd();
         }
         
-        if (empty(self::$settings)) {
+        if (empty(self::$settings) || empty(self::$settings[$settingKey[0]])) {
             return false;
         }
 
