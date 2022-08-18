@@ -2,7 +2,6 @@
 
 namespace Moh6mmad\LaravelSettings;
 
-use Illuminate\Support\ServiceProvider;
 use Moh6mmad\LaravelSettings\Console\InstallLaravelSettings;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
